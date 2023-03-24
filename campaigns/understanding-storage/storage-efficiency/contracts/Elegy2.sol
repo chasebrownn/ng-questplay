@@ -11,10 +11,12 @@ contract Elegy2 {
     }
 
     function play(uint nonce) external {
-        totalSum = 0;
-        for(uint i = 0; i < lines.length; i++) {
-            totalSum += (i * nonce) * lines[i];
+        uint _length = lines.length;
+        uint _totalSum = 0;
+        for(uint i = 0; i < _length; i++) {
+            _totalSum += (i * nonce) * lines[i];
         }
+        totalSum = _totalSum;
     }
 
 }
