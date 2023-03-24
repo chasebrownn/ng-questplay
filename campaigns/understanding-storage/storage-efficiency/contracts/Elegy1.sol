@@ -10,17 +10,17 @@ contract Elegy1 {
     bytes8  public firstVerse;   // 64  bits -> Slot 2 with 64 bits left
 
     function setVerse (
-        bytes8 _firstVerse,
+        bytes8  _firstVerse,
         bytes32 _secondVerse,
         address _thirdVerse,
         uint128 _fourthVerse,
-        uint96 _fifthVerse
+        uint96  _fifthVerse
     ) external {
-        firstVerse = _firstVerse;
+        firstVerse  = _firstVerse;
         secondVerse = _secondVerse;
-        thirdVerse = _thirdVerse;
+        thirdVerse  = _thirdVerse;
         fourthVerse = _fourthVerse;
-        fifthVerse = _fifthVerse;
+        fifthVerse  = _fifthVerse;
     }
 
 }
