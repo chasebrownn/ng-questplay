@@ -5,6 +5,7 @@ pragma solidity ^0.8.16;
 contract SimpleGameV2 {
     bool public isFinished;
     uint256 lastDepositedBlock;
+    uint256 deposited;
 
     function totalDeposit() external view returns (uint256) {
         return address(this).balance;
@@ -18,13 +19,16 @@ contract SimpleGameV2 {
             "Only can deposit once per block"
         );
 
+        deposited += 0.1 ether;
+
         lastDepositedBlock = block.number;
     }
 
     function claim() public {
-        require(address(this).balance >= 1 ether, "Condition not satisfied");
+        require(deposited >= 1 ether, "Condition not satisfied");
 
-        payable(msg.sender).transfer(address(this).balance);
+        payable(msg.sender).transfer(deposited);
+        deposited = 0;
         isFinished = true;
     }
 }
