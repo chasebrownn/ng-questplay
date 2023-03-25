@@ -34,6 +34,4 @@ contract Challenge {
         
     }
 
-    // 4553 -> 2550
-
 }
