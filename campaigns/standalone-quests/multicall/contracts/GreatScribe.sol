@@ -10,11 +10,23 @@ contract GreatScribe {
      *
      * @return results Returns array of call results represented as bytes.
      */
-    function multiread(
-        bytes[] calldata calls,
-        address archives
-    ) external view returns (bytes[] memory results) {
-        // CODE HERE
+    function multiread(bytes[] calldata calls, address archives) external view returns (bytes[] memory results) {
+        uint256 length = calls.length;
+        results = new bytes[](length);
+
+        for (uint256 i; i < length;) {
+
+            (bool success, bytes memory result) = archives.staticcall(calls[i]);
+
+            require(success, "Call failed!");
+            results[i] = result;
+
+            unchecked {
+                ++i;
+            }
+        }
+
+        return results;
     }
     
     /**
@@ -24,11 +36,23 @@ contract GreatScribe {
      *
      * @return results Returns array of call results represented as bytes.
      */
-    function multiwrite(
-        bytes[] calldata calls,
-        address archives
-    ) external returns (bytes[] memory results) {
-        // CODE HERE
+    function multiwrite(bytes[] calldata calls, address archives) external returns (bytes[] memory results) {
+        uint256 length = calls.length;
+        results = new bytes[](length);
+
+        for (uint256 i; i < length;) {
+            
+            (bool success, bytes memory result) = archives.call(calls[i]);
+
+            require(success, "Call failed!");
+            results[i] = result;
+
+            unchecked {
+                ++i;
+            }
+        }
+
+        return results;
     }
 
 }

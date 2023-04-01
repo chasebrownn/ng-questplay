@@ -9,10 +9,23 @@ abstract contract Multicall {
      *
      * @return results Returns array of call results represented as bytes.
      */
-    function multicall(
-        bytes[] calldata calls
-    ) external virtual returns (bytes[] memory results) {
-        // CODE HERE
+    function multicall(bytes[] calldata calls) external virtual returns (bytes[] memory results) {
+        uint256 length = calls.length;
+        results = new bytes[](length);
+
+        for (uint256 i; i < length;) {
+
+            (bool success, bytes memory result) = address(this).delegatecall(calls[i]);
+
+            require(success, "Call failed!");
+            results[i] = result;
+
+            unchecked {
+                ++i;
+            }
+        }
+
+        return results;
     }
 
 }
