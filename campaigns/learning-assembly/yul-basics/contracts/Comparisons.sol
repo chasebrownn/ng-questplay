@@ -6,48 +6,41 @@ contract Comparisons {
     /// @notice Returns value == 0.
     function isZero(int256 value) public pure returns (bool isZero_) {
         assembly {
-
+            isZero_ := iszero(value)
         }
     }
 
     /// @notice Returns lhs > rhs.
-    function greaterThan(uint256 lhs, uint256 rhs)
-        public
-        pure
-        returns (bool greater)
-    {
+    function greaterThan(uint256 lhs, uint256 rhs) public pure returns (bool greater) {
         assembly {
-
+            greater := gt(lhs, rhs)
         }
     }
 
     /// @notice Returns lhs < rhs.
-    function signedLowerThan(
-        int256 lhs, 
-        int256 rhs
-    ) public pure returns (bool lower) {
+    function signedLowerThan(int256 lhs, int256 rhs) public pure returns (bool lower) {
         assembly {
-
+            lower := slt(lhs, rhs)
         }
     }
 
     /// @notice Returns true if value < 0 or value == 10, false otherwise.
-    function isNegativeOrEqualTen(
-        int256 value
-    ) public pure returns (bool negativeOrEqualTen) {
+    function isNegativeOrEqualTen(int256 value) public pure returns (bool negativeOrEqualTen) {
         assembly {
-
+            if or(slt(value, 0), eq(value, 10)) {
+                negativeOrEqualTen := true
+            }
         }
     }
 
     /// @return inRange true if lower <= value <= upper, false otherwise
-    function isInRange(
-        int256 value,
-        int256 lower,
-        int256 upper
-    ) public pure returns (bool inRange) {
+    function isInRange(int256 value, int256 lower, int256 upper) public pure returns (bool inRange) {
         assembly {
-
+            if sgt(value, sub(lower, 1)) {
+                if slt(value, add(upper, 1)) {
+                    inRange := true
+                }
+            }
         }
     }
 }
