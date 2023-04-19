@@ -3,13 +3,11 @@ pragma solidity ^0.8.19;
 
 contract SafeMath {
 
-    int256 constant private _INT256_MIN = -2**255;
-
     /// @notice Returns a + b.
     /// @dev Reverts on overflow / underflow.
     function add( int256 a, int256 b) public pure returns (int256 result) {
-        bool success;
         assembly {
+            let success := false
             result := add(a, b)
             // ( c < a || c < b)
             // if or(slt(result, a), slt(result, b)) {
@@ -30,8 +28,9 @@ contract SafeMath {
     /// @notice Returns a - b.
     /// @dev Reverts on overflow / underflow.
     function sub(int256 a, int256 b) public pure returns (int256 result) {
-        bool success;
         assembly {
+            let success := false
+
             result := sub(a, b)
 
             // (b >= 0 && c <= a) || (b < 0 && c > a)
@@ -49,8 +48,9 @@ contract SafeMath {
     /// @notice Returns a * b.
     /// @dev Reverts on overflow / underflow.
     function mul(int256 a, int256 b) public pure returns (int256 result) {
-        bool success;
         assembly {
+            let success := false
+
             result := mul(a, b)
 
             // (c / a) == b
@@ -68,10 +68,11 @@ contract SafeMath {
     /// @notice Returns a / b.
     /// @dev Reverts on overflow / underflow.
     function div(int256 a, int256 b) public pure returns (int256 result) {
-        bool success;
-        int256 neg_one = -1;
-        int256 min = _INT256_MIN;
         assembly {
+            let success := false
+            let neg_one := sub(0, 1)
+            let min := exp(sub(0, 2), 255)
+
             if or(sgt(b, 0), slt(b, 0)) {
                 result := sdiv(a, b)
 
@@ -82,6 +83,7 @@ contract SafeMath {
                     success := false
                 }
             }
+
             // require(success)
             if eq(success, false) {
                 revert(0,0)
