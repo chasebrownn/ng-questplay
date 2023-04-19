@@ -9,10 +9,7 @@ contract SafeMath {
         assembly {
             let success := false
             result := add(a, b)
-            // ( c < a || c < b)
-            // if or(slt(result, a), slt(result, b)) {
-            //     revert(0, 0)
-            // }
+
             if or(and(or(sgt(b, 0), eq(b, 0)), or(sgt(result, a), eq(result, a))), and(slt(b, 0), slt(result, a))) {
                 success := true
             }
