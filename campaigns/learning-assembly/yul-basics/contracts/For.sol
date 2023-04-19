@@ -10,7 +10,11 @@ contract For {
     function sumElements(uint256 beg, uint256 end) public pure returns (uint256 sum) {
         assembly {
             for {} lt(beg, end) { beg := add(beg, 1) } {
-                if gt(mod(beg,5), 0) {
+
+                if gt(mod(beg, 5), 0) {
+                    if eq(mod(end, beg), 0) {
+                        break
+                    }
                     sum := add(sum, beg)
                 }
             }
