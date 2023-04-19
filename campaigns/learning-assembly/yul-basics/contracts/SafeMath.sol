@@ -8,12 +8,22 @@ contract SafeMath {
     /// @notice Returns a + b.
     /// @dev Reverts on overflow / underflow.
     function add( int256 a, int256 b) public pure returns (int256 result) {
+        bool success;
         assembly {
             result := add(a, b)
             // ( c < a || c < b)
-            if or(slt(result, a), slt(result, b)) {
-                revert(0, 0)
+            // if or(slt(result, a), slt(result, b)) {
+            //     revert(0, 0)
+            // }
+            if or(and(or(sgt(b, 0), eq(b, 0)), or(sgt(result, a), eq(result, a))), and(slt(b, 0), slt(result, a))) {
+                success := true
             }
+
+            // require(success)
+            if eq(success, false) {
+                revert(0,0)
+            }
+
         }
     }
 
