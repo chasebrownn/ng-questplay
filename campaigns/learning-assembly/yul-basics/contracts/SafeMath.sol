@@ -24,8 +24,12 @@ contract SafeMath {
             if or(and(or(sgt(b, 0), eq(b, 0)), or(slt(result, a), eq(result, a))), and(slt(b, 0), sgt(result, a))) {
                 success := true
             }
+
+            // require(success)
+            if eq(success, false) {
+                revert(0,0)
+            }
         }
-        require(success);
     }
 
     /// @notice Returns a * b.
@@ -39,8 +43,12 @@ contract SafeMath {
             if eq(sdiv(result, a), b) {
                 success := true
             }
+
+            // require(success)
+            if eq(success, false) {
+                revert(0,0)
+            }
         }
-        require(success);
     }
 
     /// @notice Returns a / b.
@@ -60,7 +68,10 @@ contract SafeMath {
                     success := false
                 }
             }
+            // require(success)
+            if eq(success, false) {
+                revert(0,0)
+            }
         }
-        require(success);
     }
 }
