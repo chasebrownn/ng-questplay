@@ -11,16 +11,17 @@ contract If {
         assembly {
             let success := false
 
-            if or(slt(_minutes, 0), sgt(mod(60, _minutes), 0)) {
+            // if _minutes < 0
+            if slt(_minutes, 0) {
+                revert(0,0)
+            }
+            // if _minutes is not divisible by 60
+            if sgt(mod(_minutes, 60), 0) {
                 revert(0,0)
             }
 
-            if or(gt(_minutes, 60), eq(_minutes, 60)) {
-                if eq(mod(60, _minutes), 0) {
-                    _hours := div(_minutes, 60)
-                    success := true
-                }
-            }
+            _hours := div(_minutes, 60)
+            success := true      
 
             if eq(success, false) {
                 revert(0,0)
