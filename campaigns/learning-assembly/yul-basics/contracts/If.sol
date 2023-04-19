@@ -9,23 +9,13 @@ contract If {
     /// @return _hours the number of hours represented by _minutes.
     function minutesToHours(int256 _minutes) public pure returns (uint256 _hours) {
         assembly {
-            let success := false
 
-            // if _minutes < 0
-            if slt(_minutes, 0) {
-                revert(0,0)
-            }
-            // if _minutes is not divisible by 60
-            if sgt(mod(_minutes, 60), 0) {
+            // if _minutes < 0 || if _minutes is not divisible by 60
+            if or(slt(_minutes, 0), sgt(mod(_minutes, 60), 0)) {
                 revert(0,0)
             }
 
             _hours := div(_minutes, 60)
-            success := true      
-
-            if eq(success, false) {
-                revert(0,0)
-            }
         }
     }
 }
