@@ -15,9 +15,12 @@ contract If {
                 revert(0,0)
             }
 
-            _hours := div(_minutes, 60)
-            success := true
-            
+            if or(gt(_minutes, 60), eq(_minutes, 60)) {
+                if eq(mod(60, _minutes), 0) {
+                    _hours := div(_minutes, 60)
+                    success := true
+                }
+            }
 
             if eq(success, false) {
                 revert(0,0)
