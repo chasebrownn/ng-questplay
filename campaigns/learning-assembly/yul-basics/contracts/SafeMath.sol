@@ -3,34 +3,64 @@ pragma solidity ^0.8.19;
 
 contract SafeMath {
 
-    /// @notice Returns lhs + rhs.
+    int256 constant private _INT256_MIN = -2**255;
+
+    /// @notice Returns a + b.
     /// @dev Reverts on overflow / underflow.
-    function add(
-        int256 lhs, 
-        int256 rhs
-    ) public pure returns (int256 result) {
-        // Convert this to assembly
-        result = lhs + rhs;
+    function add( int256 a, int256 b) public pure returns (int256 result) {
+        assembly {
+            result := add(a, b)
+        }
     }
 
-    /// @notice Returns lhs - rhs.
+    /// @notice Returns a - b.
     /// @dev Reverts on overflow / underflow.
-    function sub(int256 lhs, int256 rhs) public pure returns (int256 result) {
-        // Convert this to assembly
-        result = lhs - rhs;
+    function sub(int256 a, int256 b) public pure returns (int256 result) {
+        bool success;
+        assembly {
+            result := sub(a, b)
+
+            // (b >= 0 && c <= a) || (b < 0 && c > a)
+            if or(and(or(sgt(b, 0), eq(b, 0)), or(slt(result, a), eq(result, a))), and(slt(b, 0), sgt(result, a))) {
+                success := true
+            }
+        }
+        require(success);
     }
 
-    /// @notice Returns lhs * rhs.
+    /// @notice Returns a * b.
     /// @dev Reverts on overflow / underflow.
-    function mul(int256 lhs, int256 rhs) public pure returns (int256 result) {
-        // Convert this to assembly
-        result = lhs * rhs;
+    function mul(int256 a, int256 b) public pure returns (int256 result) {
+        bool success;
+        assembly {
+            result := mul(a, b)
+
+            // (c / a) == b
+            if eq(sdiv(result, a), b) {
+                success := true
+            }
+        }
+        require(success);
     }
 
-    /// @notice Returns lhs / rhs.
+    /// @notice Returns a / b.
     /// @dev Reverts on overflow / underflow.
-    function div(int256 lhs, int256 rhs) public pure returns (int256 result) {
-        // Convert this to assembly
-        result = lhs / rhs;
+    function div(int256 a, int256 b) public pure returns (int256 result) {
+        bool success;
+        int256 neg_one = -1;
+        int256 min = _INT256_MIN;
+        assembly {
+            if or(sgt(b, 0), slt(b, 0)) {
+                result := sdiv(a, b)
+
+                if eq(mul(result, b), a) {
+                    success := true
+                }
+                if and(eq(b, neg_one), eq(a, min)) {
+                    success := false
+                }
+            }
+        }
+        require(success);
     }
 }
