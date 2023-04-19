@@ -10,6 +10,10 @@ contract SafeMath {
     function add( int256 a, int256 b) public pure returns (int256 result) {
         assembly {
             result := add(a, b)
+            // ( c < a || c < b)
+            if or(slt(result, a), slt(result, b)) {
+                revert(0, 0)
+            }
         }
     }
 
